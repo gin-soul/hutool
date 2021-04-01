@@ -4,6 +4,8 @@ import cn.hutool.core.lang.hash.CityHash;
 import cn.hutool.core.lang.hash.MurmurHash;
 import cn.hutool.core.lang.hash.Number128;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * Hash算法大全<br>
  * 推荐使用FNV1算法
@@ -177,6 +179,26 @@ public class HashUtil {
 		hash ^= hash >> 17;
 		hash += hash << 5;
 		return hash & 0x7FFFFFFF;
+	}
+
+	/**
+	 * 改进的64位FNV算法1
+	 * 64 bit offset_basis = 14695981039346656037D = 9223372036854775807L
+	 *
+	 * @param data 字符串
+	 * @return hash结果
+	 */
+	public static long fnv164(String data) {
+		return fnv164(data.getBytes(StandardCharsets.UTF_8), 0, data.length(), 9223372036854775807L);
+	}
+
+	public static long fnv164(byte[] buf, int offset, int len, long seed) {
+		for (int i = offset; i < offset + len; i++) {
+			seed += (seed << 1) + (seed << 4) + (seed << 5) +
+					(seed << 7) + (seed << 8) + (seed << 40);
+			seed ^= buf[i];
+		}
+		return seed;
 	}
 
 	/**
