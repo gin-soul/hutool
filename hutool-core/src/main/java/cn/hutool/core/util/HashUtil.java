@@ -139,42 +139,44 @@ public class HashUtil {
 
 	/**
 	 * 改进的32位FNV算法1
+	 * 32 bit FNV_prime = 2^24 + 2^8 + 0x93 = 16777619
+	 * 32 bit offset_basis = 2166136261L = -2128831035
 	 *
 	 * @param data 数组
 	 * @return hash结果
 	 */
 	public static int fnvHash(byte[] data) {
-		final int p = 16777619;
-		int hash = (int) 2166136261L;
+		int hash = -2128831035;
 		for (byte b : data) {
-			hash = (hash ^ b) * p;
+			hash = (hash ^ b) * 16777619;
 		}
 		hash += hash << 13;
 		hash ^= hash >> 7;
 		hash += hash << 3;
 		hash ^= hash >> 17;
 		hash += hash << 5;
-		return Math.abs(hash);
+		return hash & 0x7FFFFFFF;
 	}
 
 	/**
 	 * 改进的32位FNV算法1
+	 * 32 bit FNV_prime = 2^24 + 2^8 + 0x93 = 16777619
+	 * 32 bit offset_basis = 2166136261L = -2128831035
 	 *
 	 * @param data 字符串
 	 * @return hash结果
 	 */
 	public static int fnvHash(String data) {
-		final int p = 16777619;
-		int hash = (int) 2166136261L;
+		int hash = -2128831035;
 		for (int i = 0; i < data.length(); i++) {
-			hash = (hash ^ data.charAt(i)) * p;
+			hash = (hash ^ data.charAt(i)) * 16777619;
 		}
 		hash += hash << 13;
 		hash ^= hash >> 7;
 		hash += hash << 3;
 		hash ^= hash >> 17;
 		hash += hash << 5;
-		return Math.abs(hash);
+		return hash & 0x7FFFFFFF;
 	}
 
 	/**
